@@ -12,7 +12,9 @@ type Contact = {
 };
 
 const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+
+const isValidMobile = (value: string) => /^01[0-9]*$/.test(value);
 
 export default function Home() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -59,6 +61,10 @@ export default function Home() {
 
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!isValidMobile(form.mobile)) {
+      setError("Mobile must start with 01 and contain digits only.");
+      return;
+    }
     try {
       setCreating(true);
       setError(null);
@@ -90,6 +96,10 @@ export default function Home() {
   };
 
   const handleUpdate = async (id: number) => {
+    if (!isValidMobile(editForm.mobile)) {
+      setError("Mobile must start with 01 and contain digits only.");
+      return;
+    }
     try {
       setBusyId(id);
       setError(null);
@@ -181,8 +191,14 @@ export default function Home() {
                 required
                 value={form.mobile}
                 onChange={(event) =>
-                  setForm((prev) => ({ ...prev, mobile: event.target.value }))
+                  setForm((prev) => ({
+                    ...prev,
+                    mobile: event.target.value.replace(/[^0-9]/g, ""),
+                  }))
                 }
+                inputMode="numeric"
+                pattern="^01[0-9]*$"
+                title="Must start with 01 and contain digits only."
                 className="mt-2 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-base shadow-sm focus:border-black/30 focus:outline-none"
                 placeholder="01700000000"
               />
@@ -258,9 +274,12 @@ export default function Home() {
                           onChange={(event) =>
                             setEditForm((prev) => ({
                               ...prev,
-                              mobile: event.target.value,
+                              mobile: event.target.value.replace(/[^0-9]/g, ""),
                             }))
                           }
+                          inputMode="numeric"
+                          pattern="^01[0-9]*$"
+                          title="Must start with 01 and contain digits only."
                           className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                         />
                         <input
