@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 
+// Configure the primary and mono fonts for the app.
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
@@ -13,11 +14,15 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
+// Default metadata for the app shell.
 export const metadata: Metadata = {
   title: "Contacts Desk",
   description: "Simple contacts manager for name and phone numbers",
 };
 
+/**
+ * App root layout with global font variables and styling.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

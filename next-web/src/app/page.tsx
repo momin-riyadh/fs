@@ -11,11 +11,16 @@ type Contact = {
   updatedAt: string;
 };
 
+// Resolve the API base URL from the public env variable.
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
+// Mobile numbers must start with 01 and contain digits only.
 const isValidMobile = (value: string) => /^01[0-9]*$/.test(value);
 
+/**
+ * Contacts page with create, edit, and delete flows.
+ */
 export default function Home() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,8 +39,10 @@ export default function Home() {
     contactNumber: "",
   });
 
+  // Total count for the dashboard pill.
   const total = useMemo(() => contacts.length, [contacts]);
 
+  // Fetch the contact list from the API.
   const fetchContacts = async () => {
     try {
       setLoading(true);
@@ -55,10 +62,12 @@ export default function Home() {
     }
   };
 
+  // Initial load on first render.
   useEffect(() => {
     fetchContacts();
   }, []);
 
+  // Create a new contact from the form.
   const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isValidMobile(form.mobile)) {
@@ -86,6 +95,7 @@ export default function Home() {
     }
   };
 
+  // Hydrate the edit form and open edit mode.
   const startEditing = (contact: Contact) => {
     setEditingId(contact.id);
     setEditForm({
@@ -95,6 +105,7 @@ export default function Home() {
     });
   };
 
+  // Persist edits for the selected contact.
   const handleUpdate = async (id: number) => {
     if (!isValidMobile(editForm.mobile)) {
       setError("Mobile must start with 01 and contain digits only.");
@@ -121,6 +132,7 @@ export default function Home() {
     }
   };
 
+  // Delete a contact and update the list locally.
   const handleDelete = async (id: number) => {
     try {
       setBusyId(id);
