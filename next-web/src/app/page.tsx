@@ -161,7 +161,7 @@ export default function Home() {
           Contacts Desk
         </span>
         <h1 className="text-3xl font-semibold leading-tight text-[color:var(--ink)] md:text-5xl">
-          Manage names, mobile numbers, and contact numbers in one bright panel.
+          Manage Contacts
         </h1>
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <span className="rounded-full bg-white/70 px-4 py-1 shadow-[0_12px_28px_var(--shadow)]">
