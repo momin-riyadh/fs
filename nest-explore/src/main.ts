@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['http://localhost:3001', 'http://localhost:3000'],
   });
-  const port = Number(process.env.PORT ?? 3000);
+  const port = Number(process.env.PORT ?? 3001);
   await app.listen(port);
   // Log the bound port for quick verification in dev.
   console.log(`Server running on http://localhost:${port}`);
