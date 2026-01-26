@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { ConfirmDialog } from "@/components/confirm-dialog";
+import { useToast } from "@/components/toast";
 
 type Contact = {
   id: number;
@@ -38,6 +40,8 @@ export default function Home() {
     mobile: "",
     contactNumber: "",
   });
+  const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
+  const { addToast } = useToast();
 
   // Total count for the dashboard pill.
   const total = useMemo(() => contacts.length, [contacts]);
@@ -88,6 +92,11 @@ export default function Home() {
       const created = (await response.json()) as Contact;
       setContacts((prev) => [created, ...prev]);
       setForm({ name: "", mobile: "", contactNumber: "" });
+      addToast({
+        title: "Contact saved",
+        description: `${created.name} added to the list.`,
+        variant: "success",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error.");
     } finally {
@@ -125,6 +134,11 @@ export default function Home() {
       const updated = (await response.json()) as Contact;
       setContacts((prev) => prev.map((item) => (item.id === id ? updated : item)));
       setEditingId(null);
+      addToast({
+        title: "Contact updated",
+        description: `${updated.name} saved successfully.`,
+        variant: "success",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error.");
     } finally {
@@ -133,22 +147,43 @@ export default function Home() {
   };
 
   // Delete a contact and update the list locally.
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (contact: Contact) => {
     try {
-      setBusyId(id);
+      setBusyId(contact.id);
       setError(null);
-      const response = await fetch(`${apiBaseUrl}/contacts/${id}`, {
+      const response = await fetch(`${apiBaseUrl}/contacts/${contact.id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error("Failed to delete contact.");
       }
-      setContacts((prev) => prev.filter((item) => item.id !== id));
+      setContacts((prev) => prev.filter((item) => item.id !== contact.id));
+      addToast({
+        title: "Contact deleted",
+        description: `${contact.name} removed from the list.`,
+        variant: "success",
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error.");
     } finally {
       setBusyId(null);
     }
+  };
+
+  const confirmDelete = (contact: Contact) => {
+    setDeleteTarget(contact);
+  };
+
+  const closeDelete = () => {
+    setDeleteTarget(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) {
+      return;
+    }
+    await handleDelete(deleteTarget);
+    setDeleteTarget(null);
   };
 
   return (
@@ -345,7 +380,7 @@ export default function Home() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDelete(contact.id)}
+                            onClick={() => confirmDelete(contact)}
                             disabled={busyId === contact.id}
                             className="rounded-full border border-black/10 bg-black px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:-translate-y-0.5 disabled:opacity-60"
                           >
@@ -361,6 +396,16 @@ export default function Home() {
           )}
         </section>
       </main>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title={`Delete ${deleteTarget?.name ?? "contact"}?`}
+        description="This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        busy={busyId === deleteTarget?.id}
+        onCancel={closeDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
