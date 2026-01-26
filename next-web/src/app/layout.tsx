@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/toast";
+import { CommonLayout } from "@/components/common-layout";
 
 // Configure the primary and mono fonts for the app.
 const spaceGrotesk = Space_Grotesk({
@@ -35,7 +36,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${spaceGrotesk.variable} ${spaceMono.variable} antialiased`}
       >
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <CommonLayout>{children}</CommonLayout>
+        </ToastProvider>
       </body>
     </html>
   );

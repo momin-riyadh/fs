@@ -198,7 +198,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-6 py-12">
+    <div className="relative min-h-full overflow-hidden py-8">
       <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-[rgba(244,162,89,0.35)] blur-[120px]" />
       <div className="pointer-events-none absolute -right-32 top-56 h-72 w-72 rounded-full bg-[rgba(123,159,134,0.25)] blur-[120px]" />
 
