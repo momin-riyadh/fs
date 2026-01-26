@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Core color tokens. */
 :root {
   --ink: #1b1a17;
   --paper: #f7f2ea;
@@ -10,6 +11,7 @@
   --shadow: rgba(18, 18, 18, 0.14);
 }
 
+/* Tailwind theme tokens. */
 @theme inline {
   --color-background: var(--paper);
   --color-foreground: var(--ink);
@@ -17,6 +19,7 @@
   --font-mono: var(--font-space-mono);
 }
 
+/* App shell background and typography. */
 body {
   background:
     radial-gradient(1200px 600px at -10% -20%, var(--clay), transparent 60%),
@@ -27,6 +30,7 @@ body {
   min-height: 100svh;
 }
 
+/* Toast entrance animation. */
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -36,4 +40,32 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Thin, auto-hide scrollbar styling. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(27, 26, 23, 0.35) transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(27, 26, 23, 0.6) rgba(27, 26, 23, 0.08);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 999px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(27, 26, 23, 0.6);
 }

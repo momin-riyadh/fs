@@ -30,6 +30,7 @@ export default function Home() {
   const [creating, setCreating] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
+  const [query, setQuery] = useState("");
   const [form, setForm] = useState({
     name: "",
     mobile: "",
@@ -45,6 +46,16 @@ export default function Home() {
 
   // Total count for the dashboard pill.
   const total = useMemo(() => contacts.length, [contacts]);
+  const filteredContacts = useMemo(() => {
+    const trimmed = query.trim().toLowerCase();
+    if (!trimmed) {
+      return contacts;
+    }
+    return contacts.filter((contact) => {
+      const haystack = `${contact.name} ${contact.mobile} ${contact.contactNumber}`.toLowerCase();
+      return haystack.includes(trimmed);
+    });
+  }, [contacts, query]);
 
   // Fetch the contact list from the API.
   const fetchContacts = async () => {
@@ -283,21 +294,34 @@ export default function Home() {
         </section>
 
         <section className="rounded-3xl border border-black/10 bg-white/70 p-6 shadow-[0_25px_60px_var(--shadow)] backdrop-blur">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Contacts</h2>
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-black/50">
-              Live
-            </span>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-semibold">Contacts</h2>
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-black/50">
+                Live
+              </span>
+            </div>
+            <label className="w-full max-w-xs text-sm text-black/60">
+              <span className="sr-only">Search contacts</span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search by name or number"
+                className="w-full rounded-2xl border border-black/10 bg-white px-4 py-2 text-sm shadow-sm focus:border-black/30 focus:outline-none"
+              />
+            </label>
           </div>
           {loading ? (
             <p className="mt-6 text-sm text-black/60">Loading...</p>
-          ) : contacts.length === 0 ? (
+          ) : filteredContacts.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-black/20 p-6 text-center text-sm text-black/50">
-              No contacts yet. Add the first one on the left.
+              {contacts.length === 0
+                ? "No contacts yet. Add the first one on the left."
+                : "No contacts match your search."}
             </div>
           ) : (
-            <div className="mt-6 space-y-4">
-              {contacts.map((contact) => {
+            <div className="mt-6 max-h-[calc(100vh-340px)] space-y-4 overflow-y-auto pr-2">
+              {filteredContacts.map((contact) => {
                 const isEditing = editingId === contact.id;
                 return (
                   <div
