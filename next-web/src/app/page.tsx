@@ -17,11 +17,11 @@ type Contact = {
 const apiBaseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
-// Mobile numbers must start with 01 and contain digits only.
-const isValidMobile = (value: string) => /^01[0-9]*$/.test(value);
+// Mobile numbers must start with 01 and contain 11 digits only.
+const isValidMobile = (value: string) => /^01[0-9]{9}$/.test(value);
 
 /**
- * Contacts page with create, edit, and delete flows.
+ * Contacts page with creation, edit, and delete flows.
  */
 export default function Home() {
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -86,7 +86,7 @@ export default function Home() {
     const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!isValidMobile(form.mobile)) {
-            setError("Mobile must start with 01 and contain digits only.");
+            setError("Mobile must start with 01 and contain 11 digits only.");
             return;
         }
         try {
@@ -128,7 +128,7 @@ export default function Home() {
     // Persist edits for the selected contact.
     const handleUpdate = async (id: number) => {
         if (!isValidMobile(editForm.mobile)) {
-            setError("Mobile must start with 01 and contain digits only.");
+            setError("Mobile must start with 01 and contain 11 digits only.");
             return;
         }
         try {
@@ -252,8 +252,10 @@ export default function Home() {
                                     }))
                                 }
                                 inputMode="numeric"
-                                pattern="^01[0-9]*$"
-                                title="Must start with 01 and contain digits only."
+                                minLength={11}
+                                maxLength={11}
+                                pattern="^01[0-9]{9}$"
+                                title="Must start with 01 and contain 11 digits only."
                                 className="mt-2 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-base shadow-sm focus:border-black/30 focus:outline-none"
                                 placeholder="01700000000"
                             />
@@ -347,8 +349,10 @@ export default function Home() {
                                                         }))
                                                     }
                                                     inputMode="numeric"
-                                                    pattern="^01[0-9]*$"
-                                                    title="Must start with 01 and contain digits only."
+                                                    minLength={11}
+                                                    maxLength={11}
+                                                    pattern="^01[0-9]{9}$"
+                                                    title="Must start with 01 and contain 11 digits only."
                                                     className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
                                                 />
                                                 <input
