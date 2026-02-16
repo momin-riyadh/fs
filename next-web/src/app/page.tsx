@@ -77,7 +77,7 @@ export default function Home() {
         }
     };
 
-    // Initial load on first render.
+    // Initial load on the first render.
     useEffect(() => {
         fetchContacts();
     }, []);
