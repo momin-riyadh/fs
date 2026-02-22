@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
         children: [
             {label: "All contacts", href: "/"},
             {label: "Segments", href: "/segments"},
-            {label: "Import", href: "/import"},
+            {label: "About Us", href: "/about-us"},
         ],
     },
     {

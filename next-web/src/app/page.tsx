@@ -1,8 +1,8 @@
 "use client";
 
 import {useEffect, useMemo, useState, type FormEvent} from "react";
-import {ConfirmDialog} from "@/components/confirm-dialog";
-import {useToast} from "@/components/toast";
+import {ConfirmDialog} from "@/app/_components/confirm-dialog";
+import {useToast} from "@/app/_components/toast";
 
 type Contact = {
     id: number;
